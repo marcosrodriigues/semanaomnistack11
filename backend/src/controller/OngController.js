@@ -9,18 +9,23 @@ module.exports = {
         return response.json(ongs);
     },
     async create(request, response) {
-        const { name, email, whatsapp, city, uf } = req.body;
+        const { name, email, whatsapp, city, uf } = request.body;
         const id = crypto.randomBytes(4).toString('HEX');
 
-        await connection('ongs').insert({
-            id,
-            name,
-            email,
-            whatsapp,
-            city,
-            uf
-        })
-
-        return res.json({ id });
+        try {
+            await connection('ongs').insert({
+                id,
+                name,
+                email,
+                whatsapp,
+                city,
+                uf
+            })
+    
+            return response.json({ id });
+        } catch (err) {
+            return response.json({error: "Ocorreu um erro ao cadastrar. " + err})
+        }
+        
     }
 }
